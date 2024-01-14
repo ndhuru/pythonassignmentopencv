@@ -69,7 +69,7 @@ class RobotControlApp:
 
     def start_video_stream(self):
         # Open a video capture object (use 0 for the default camera)
-        cap = cv2.VideoCapture(0)
+        cap = cv2.VideoCapture("http://127.0.0.1:5000/video_feed") #REPLACE WITH URL TO CAMERA
 
         while True:
             # Read a frame from the video capture object
