@@ -39,12 +39,6 @@ def loginUser(conn, cursor, username, password):
     user = cursor.fetchone()
 
     if user:
-        # Open a new window to welcome the user
-        welcome_window = tk.Toplevel()
-        welcome_window.geometry("900x600")
-        welcome_label = tk.Label(welcome_window, text=f"Welcome!")
-        welcome_label.pack()
-
         # Write the username to a temporary file
         with open("temp_username.txt", "w") as temp_file:
             temp_file.write(username)
