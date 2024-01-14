@@ -2,6 +2,8 @@ import tkinter as tk
 import requests
 import threading
 from userlog import UserLog
+import cv2
+from PIL import Image, ImageTk
 
 # Read the username from the temporary file
 with open("temp_username.txt", "r") as temp_file:
@@ -54,8 +56,45 @@ class RobotControlApp:
         root.bind("<d>", lambda event: self.send_command("right"))
         root.bind("<q>", lambda event: self.send_command("stop"))
 
-        # Initialize UserLog
+        # Initialize UserLog with the obtained username
         self.user_log = UserLog(root, username=username)
+
+        # Create a label for displaying the video stream
+        self.video_canvas = tk.Canvas(root, width=300, height=300, bg="gray")
+        self.video_canvas.grid(row=0, column=0, rowspan=2, columnspan=2)
+
+        # Start the video stream thread
+        self.video_stream_thread = threading.Thread(target=self.start_video_stream)
+        self.video_stream_thread.start()
+
+    def start_video_stream(self):
+        # Open a video capture object (use 0 for the default camera)
+        cap = cv2.VideoCapture(0)
+
+        while True:
+            # Read a frame from the video capture object
+            ret, frame = cap.read()
+
+            if ret:
+                # Convert the frame from BGR to RGB
+                rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+
+                # Resize the frame to fit the canvas
+                rgb_frame = cv2.resize(rgb_frame, (400, 300))
+
+                # Convert the frame to a PhotoImage format
+                image = Image.fromarray(rgb_frame)
+                photo = ImageTk.PhotoImage(image=image)
+
+                # Update the video canvas with the new frame
+                self.video_canvas.create_image(0, 0, anchor=tk.NW, image=photo)
+
+            # Sleep for a short duration to control the frame rate
+            self.root.update()
+            self.root.after(10)
+
+        # Release the video capture object when the window is closed
+        cap.release()
 
     def send_command(self, command):
         # Log user action before sending the command
