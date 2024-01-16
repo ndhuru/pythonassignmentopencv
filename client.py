@@ -5,7 +5,7 @@ from userlog import UserLog
 import cv2
 from PIL import Image, ImageTk
 
-# Read the username from the temporary file
+# read the username from the temporary file
 with open("temp_username.txt", "r") as temp_file:
     username = temp_file.read().strip()
 
@@ -15,7 +15,7 @@ class RobotControlApp:
         self.root.geometry("600x600")
         self.root.title("Robot Control App")
 
-        # Create four quadrants
+        # create four quadrants
         self.quadrant1 = tk.Frame(root, bg="gray", width=300, height=300)
         self.quadrant1.grid(row=0, column=0, rowspan=2, columnspan=2)
 
@@ -69,7 +69,7 @@ class RobotControlApp:
 
     def start_video_stream(self):
         # Open a video capture object (use 0 for the default camera)
-        cap = cv2.VideoCapture("http://127.0.0.1:5000/video_feed") #REPLACE WITH URL TO CAMERA
+        cap = cv2.VideoCapture("http://127.0.0.1:2345/video_feed") #REPLACE WITH URL TO CAMERA
 
         while True:
             # Read a frame from the video capture object
@@ -80,7 +80,7 @@ class RobotControlApp:
                 rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
                 # Resize the frame to fit the canvas
-                rgb_frame = cv2.resize(rgb_frame, (400, 300))
+                rgb_frame = cv2.resize(rgb_frame, (600, 400))
 
                 # Convert the frame to a PhotoImage format
                 image = Image.fromarray(rgb_frame)
